@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Ajouter une note{% endblock %}
+
+{% block content %}
+
+<h2>Nouvelle Note</h2>
+
+<form method="post" enctype="multipart/form-data" class="mt-4">
+    {% csrf_token %}
+    <p>
+        <label for="id_titre" class="form-label"><strong>Titre :</strong></label>
+        {{ form.titre }}
+    </p>
+    <p> <label for="id_categorie" class="form-label"><strong>Categorie :</strong></label>
+        {{ form.categorie }}
+    </p>
+    <p>
+        <label for="id_contenu" class="form-label"><strong>Contenu :</strong></label>
+        {{ form.contenu }}
+    </p>
+    <p>
+        <label for="id_media" class="form-label"><strong>Fichier(image,audio, pdf, ..) :</strong></label>
+        {{ form.media }}
+    </p>
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+    <a href="{% url 'liste-notes' %}">Annuler</a>
+</form>
+
+{% endblock %}

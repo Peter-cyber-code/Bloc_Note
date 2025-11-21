@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Page d'une note{% endblock %}
+
+{% block content %}
+
+<h2>Ici est votre note : <mark>{{ note.titre }}</mark></h2>
+<div class="card mb-2 shadow-sm bg-green">
+        <div class="card-body">
+            <h5 class="card-title text-primary">{{ note.titre }}</a></h5>
+            <p class="card-text">{{ note.contenu }}</p>
+            {% if note.media %}
+                <h6 class="mt-3">Média :</h6>
+                <p>Vous avez un fichier ici vous pouvez le voir ou le télécharger</p>
+                <a href="{{ note.media.url }}" target="_blank">Télécharger ou voir le fichier</a>
+            {% endif %}
+            <small class="text-muted d-block mt-2">Créée le {{ note.date_creation }}</small>
+
+            <!-- Boutons modifier / supprimer -->
+            <div class="float-end">
+                <a href="{% url 'update-note' note.id  %}" class="btn btn-sm btn-primary">Edit✏</a>
+                <a href="{% url 'delete-note' note.id %}" class="btn btn-sm btn-danger">Delete🗑</a>
+            </div>
+        </div>
+</div>
+<a class="btn btn-outline-primary" href="{% url 'liste-notes' %}">Retour</a>
+
+{% endblock %}

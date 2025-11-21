@@ -1,0 +1,75 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Liste des notes{% endblock %}
+
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Mes Notes</h2>
+        <br>
+        <!-- Barre de recherche et bouton ajout -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <form method="get" class="d-flex">
+                    <input type="text" name="search" class="form-control me-2" placeholder="Rechercher une note ....." value="{{ request.GET.search }}" >
+                    <button class="btn btn-outline-secondary" type="submit">🔍</button>
+                </form>
+            </div>
+            <br><br>
+             <div class="col-md-4 text-end">
+            <a href="{% url 'ajouter-note' %}" class="btn btn-primary" style="display: inline-block;">Add＋</a>  
+            <br><br>
+            
+            <form method="get" class="mb-3">
+                <p>Filtrer ici par catégorie: </p>
+                <!--Menu déroulant pour choisir la catégorie-->
+                <select name="categorie" class="form-select" onchange="this.form.submit()">
+                    <!--Par défaut: affiche toutes les notes-->
+                    <p>Filtrer ici par catégorie: </p>
+                    <option value="Toutes" {% if selected == "Toutes" %}selected{% endif %}>
+                        Toutes les catégories
+                    </option>
+                    <!-- On génère une option pour chaque catégorie du modèle -->
+                    {% for cat in categories %}
+
+                        <!-- Si la catégorie courante correspond à celle choisie => on la sélectionne -->
+                        <option value="{{ cat }}" {% if selected == cat %}selected{% endif %}>
+                            {{ cat }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        </div>
+       
+
+        <!-- Liste des notes -->
+        {% for note in notes %}
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body d-flex justify-content-between align-items-start">
+                <div>
+                    <h5 class="card-title text-primary mb-1"><a href="{% url 'voir-note' note.id %}" class="text-decoration-noe">{{ note.titre }}</a></h5>
+                    <p class="card-text mb-2">{{ note.contenu|truncatewords:10 }}</p>
+                </div>
+            
+        
+            
+
+                <!-- Boutons modifier / supprimer -->
+                <div class="ms-3 text-end" style="min-width: 150px;">
+                    <a href="{% url 'update-note' note.id  %}" class="btn btn-sm btn-outline-primary me-2">Modi✏</a>
+                    <a href="{% url 'delete-note' note.id %}" class="btn btn-sm btn-danger">Sup🗑</a>
+                </div>
+                
+
+            </div>
+                <small class="text-muted" style="width:100%;display:block;text-align:right; padding-right:15px;padding-bottom:10px;">Créée le {{ note.date_creation }}</small>
+
+        </div>
+        {% empty %}
+            <p>Aucune note trouvée.</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}

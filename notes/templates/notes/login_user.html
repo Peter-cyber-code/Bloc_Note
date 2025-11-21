@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %} Page de connexion{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            <label> Nom d'utilisateur :</label>
+            <input type="text" name="username" required>
+        </p>
+        <p>
+            <label>Mot de passe :</label>
+            <input type="password" name="password" required>
+        </p> 
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color:red;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        <button type="submit">Connecter</button>
+        
+{% endblock %}

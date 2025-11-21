@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Page de suppresion{% endblock %}
+
+{% block content %}
+<p>Voulez vous vraiment supprimer <strong>{{ note.titre }}</strong> ?</p>
+<form method="post">
+    {% csrf_token %}
+    <button class="btn btn-outline-danger" type="submit">Supprimer</button>
+    <a class="btn btn-secondary" href="{% url 'liste-notes' %}">Annuler</a>
+</form>
+{% endblock %}
