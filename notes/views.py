@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from notes.forms import CreateUserForm, NotesForm
+from django.contrib.auth import login, logout
+from notes.forms import LoginUserForm, NotesForm
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from notes.models import Note
@@ -50,38 +50,46 @@ def voir_note(request, note_id):
     note = get_object_or_404(Note, user=request.user, id=note_id)
     return render(request, 'notes/voir_note.html', {'note': note})
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout
+from django.contrib import messages
+from .forms import SignUpForm, LoginUserForm
+
+def inscription(request):
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("liste-notes")
+    else:
+        form = SignUpForm()
+
+    return render(request, "notes/inscription.html", {"form": form})
+
+
 def login_user(request):
     if request.user.is_authenticated:
-        return redirect('liste-notes')
+        return redirect("liste-notes")
+
+    if request.method == "POST":
+        form = LoginUserForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect("liste-notes")
+        else:
+            messages.error(request, "Nom d’utilisateur ou mot de passe incorrect.")
     else:
-        if request.method == "POST":
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('liste-notes')
-            else:
-                messages.info(request, "Le mot de passe ou Nom d'utilisateur est incorrecte")
-        return render(request, 'notes/login_user.html')      
+        form = LoginUserForm()
+
+    return render(request, "notes/login_user.html", {"form": form})
+
 
     
 def logout_user(request):
     logout(request)
     return redirect('login-user')
-
-def inscription(request):
-    if request.user.is_authenticated:
-        return redirect('liste-notes')
-    
-    if request.method == "POST":
-        form = CreateUserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('liste-notes')
-    else:
-        form = CreateUserForm()
-    return render(request, 'notes/inscription.html', {'form': form})
 
 
 def update_note(request, note_id):
